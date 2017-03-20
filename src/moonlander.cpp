@@ -15,13 +15,17 @@ SDL_Window *gWindow = NULL; // Game window
 SDL_Surface *gBackground = NULL; // Surface object containing the background
 SDL_Texture *gTexture = NULL; // Temp
 SDL_Renderer *gRenderer = NULL; // Window renderer
+LTexture bgTexture; // Texture for background
+LTexture object;
+
 // Images
-char backgroundImage[] = "media/background.bmp"; // Background image
+char bgPath[] = "media/background.bmp"; // Background image
 char shipImage[] = "media/dot.bmp"; // Image to render ship
 
 int main(int argc, char *argv[])
 {
     DBG_PRINT("### Starting program at main() ###");
+    //
     // Initialize SDL
     if (!init()) 
     { // If initialization fails
@@ -34,7 +38,11 @@ int main(int argc, char *argv[])
         
         // Event handler
         SDL_Event e;
+
         loadMedia();
+        int x = 0;
+        int y = 0;
+        
         // Main loop
         while (!quit) 
         {
@@ -46,12 +54,20 @@ int main(int argc, char *argv[])
                 } // end if
             } // end while
 
+            // Clear screen
+            SDL_SetRenderDrawColor(gRenderer, // Renderer
+                                0x00, // R
+                                0x00, // G
+                                0x00, // B
+                                0x00 // Alpha
+                                );
             SDL_RenderClear(gRenderer);
-            SDL_RenderCopy(gRenderer, // renderer
-                            gTexture, // Texture
-                            NULL, // ?
-                            NULL // ?
-                            );
+
+            // Render objects
+            bgTexture.render(gRenderer, 0, 0);
+            object.render(gRenderer, x++, y++);
+
+            // Update screen
             SDL_RenderPresent( gRenderer );
         } // end while
     } // end if 
@@ -103,7 +119,7 @@ bool init()
             // Create renderer for window
             gRenderer = SDL_CreateRenderer(gWindow, // Window to render
                                             -1, // Index flag. -1 first one supporting requested flags
-                                            SDL_RENDERER_ACCELERATED // Render flags
+                                            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC// Render flags
                                             );
             if (gRenderer == NULL) 
             {
@@ -119,17 +135,22 @@ bool init()
                                     0x00, // B
                                     0x00 // Alpha
                                     );
+
                 // Initialize png loading
                 int imgFlags = IMG_INIT_PNG;
                 if (!(IMG_Init(imgFlags) & imgFlags)) 
                 {
-                    fprintf(stderr, "SDL_Image could not initialize! SDL image error: %s\n", IMG_GetError());
+                    fprintf(stderr, 
+                            "SDL_Image could not initialize! SDL image error: %s\n", 
+                            IMG_GetError());
                     success = false;
                 }
             } // end if
         } // endif
     } // endif
+
     return success;
+
 } // end init
 
 SDL_Texture* loadTexture(char *s)
@@ -168,10 +189,15 @@ bool loadMedia()
     bool success = true; // Success flag
 
     // Load png texture
-    gTexture = loadTexture(backgroundImage);
-    if (gTexture == NULL)
+
+    if (!bgTexture.loadFromFile(gRenderer, bgPath))
     {
         fprintf(stderr, "Failed to load texture image!\n");
+        success = false;
+    }
+    if (!object.loadFromFile(gRenderer, shipImage))
+    {
+        fprintf(stderr, "Failed to load ship image!\n");
         success = false;
     }
 

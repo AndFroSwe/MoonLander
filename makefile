@@ -19,7 +19,7 @@ DEBUG = -D DEBUG_PRINT
 
 # Compilation
 build/$(EXE): $(OBJ_FILES)
-	$(CC) $(ALLFLAGS) -o $@ $< $(LIBRARIES) $(INCLUDES) $(LINKER_FLAGS) $(DEBUG)
+	$(CC) $(ALLFLAGS) -o $@ $^ $(LIBRARIES) $(INCLUDES) $(LINKER_FLAGS) $(DEBUG)
 
 obj/%.o: src/%.cpp src/%.h
 	$(CC) $(ALLFLAGS) -c -o $@ $< $(LIBRARIES) $(INCLUDES) $(LINKER_FLAGS) $(DEBUG)
