@@ -78,15 +78,21 @@ void LTexture::mFree()
     }
 }
 
-void LTexture::render(SDL_Renderer *r, int x, int y) 
+void LTexture::render(SDL_Renderer *r, int x, int y, SDL_Rect *clip) 
 {
     DBG_PRINT_CLASS("render", "LTexture");
 
     // Set rendering space and render to screen
     SDL_Rect renderQuad = {x, y, mWidth, mHeight};
+
+    if (clip != NULL)
+    {
+        renderQuad.w = clip->w;
+        renderQuad.h = clip->h;
+    } // end if
     SDL_RenderCopy(r, // SDL Renderer
                     mTexture, // Texture
-                    NULL, // How much of texture
+                    clip, // How much of texture
                     &renderQuad // Destination structure
                     );
 }

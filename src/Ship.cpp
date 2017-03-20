@@ -64,11 +64,11 @@ void Ship::move()
     yPos += yVel;
 }
 
-void Ship::render(SDL_Renderer *r, LTexture &t)
+void Ship::render(SDL_Renderer *r, LTexture &t, SDL_Rect *clip)
 {
     DBG_PRINT_CLASS("render", "Ship");
 
     // Set rendering space and render to screen
-    t.render(r, xPos, yPos);
+    t.render(r, (xPos - clip->w)/2, (yPos - clip->h)/2, clip);
 
 }

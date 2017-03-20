@@ -23,7 +23,7 @@ class Ship
         // *** Methods ***
         void handleEvent(SDL_Event &); // Handle button presses
         void move(); // Moves the ship
-        void render(SDL_Renderer*, LTexture&); // Renders the ship
+        void render(SDL_Renderer*, LTexture&, SDL_Rect*); // Renders the ship
 
     private:
         // *** Shape parameters ***

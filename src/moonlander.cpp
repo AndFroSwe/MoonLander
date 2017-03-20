@@ -17,8 +17,12 @@ LTexture bgTexture; // Texture for background
 LTexture object;
 
 // Images
-char bgPath[] = "media/background.bmp"; // Background image
-char shipImage[] = "media/dot.bmp"; // Image to render ship
+char bgPath[] = "media/background.png"; // Background image
+char shipImage[] = "media/spritehank.png"; // Image to render ship
+// Sprite options
+const int ANIMATIONS = 4; // Number of animations in sprite
+SDL_Rect gSpriteClips[ANIMATIONS];
+
 
 int main(int argc, char *argv[])
 {
@@ -42,6 +46,9 @@ int main(int argc, char *argv[])
         
         // Game objects
         Ship ship;
+
+        // Frame count
+        int frame = 0;
         
         // Main loop
         while (!quit) 
@@ -68,11 +75,16 @@ int main(int argc, char *argv[])
             SDL_RenderClear(gRenderer);
 
             // Render objects
-            bgTexture.render(gRenderer, 0, 0);
-            ship.render(gRenderer, object);
+            bgTexture.render(gRenderer, 0, 0, NULL);
+            SDL_Rect *currentClip = &gSpriteClips[frame/4];
+            ship.render(gRenderer, object, currentClip);
 
             // Update screen
             SDL_RenderPresent( gRenderer );
+
+            // Update frame count
+            frame = (frame + 1)%16;
+
         } // end while
     } // end if 
     //
@@ -174,6 +186,27 @@ bool loadMedia()
     {
         fprintf(stderr, "Failed to load ship image!\n");
         success = false;
+    } else {
+		//Set sprite clips
+		gSpriteClips[ 0 ].x =   0;
+		gSpriteClips[ 0 ].y =   0;
+		gSpriteClips[ 0 ].w =  60;
+		gSpriteClips[ 0 ].h =  80;
+
+		gSpriteClips[ 1 ].x =  60;
+		gSpriteClips[ 1 ].y =   0;
+		gSpriteClips[ 1 ].w =  60;
+		gSpriteClips[ 1 ].h =  80;
+		
+		gSpriteClips[ 2 ].x = 120;
+		gSpriteClips[ 2 ].y =   0;
+		gSpriteClips[ 2 ].w =  60;
+		gSpriteClips[ 2 ].h =  80;
+
+		gSpriteClips[ 3 ].x = 180;
+		gSpriteClips[ 3 ].y =   0;
+		gSpriteClips[ 3 ].w =  60;
+		gSpriteClips[ 3 ].h =  80;
     }
 
     return success;

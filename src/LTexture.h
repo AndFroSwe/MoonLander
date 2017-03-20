@@ -24,7 +24,7 @@ public:
     ~LTexture(); // Destructor
     // *** Methods ***
     bool loadFromFile(SDL_Renderer*, char*, bool); // Loads a texture
-    void render(SDL_Renderer*, int, int); // Render to screen
+    void render(SDL_Renderer*, int, int, SDL_Rect*); // Render to screen
     void mFree(); // Deallocates resources used by texture
 // *** Getters ***
 int getWidth();
