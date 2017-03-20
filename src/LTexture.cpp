@@ -9,7 +9,7 @@
 // *** Constructors and destructors ***
 LTexture::LTexture()
 {
-    DBG_PRINT_CLASS("Default constructor of LTexture");
+    DBG_PRINT_CLASS("Default constructor", "LTexture");
 
     // Initialize everything to 0
     mTexture = NULL;
@@ -19,7 +19,7 @@ LTexture::LTexture()
 
 LTexture::~LTexture()
 {
-    DBG_PRINT_CLASS("Destructor of LTexture");
+    DBG_PRINT_CLASS("Destructor", "LTexture");
     mFree();
 }
 
@@ -27,7 +27,7 @@ LTexture::~LTexture()
 bool LTexture::loadFromFile(SDL_Renderer *r, char *s)
 {
 
-    DBG_PRINT_CLASS("loadFromFile of LTexture");
+    DBG_PRINT_CLASS("loadFromFile", "LTexture");
 
     mFree(); // Get rid of existing texture
 
@@ -64,7 +64,7 @@ bool LTexture::loadFromFile(SDL_Renderer *r, char *s)
 
 void LTexture::mFree()
 {
-    DBG_PRINT_CLASS("mFree of LTexture");
+    DBG_PRINT_CLASS("mFree", "LTexture");
 
     // Free texture if it exists
     if (mTexture != NULL) {
@@ -77,7 +77,7 @@ void LTexture::mFree()
 
 void LTexture::render(SDL_Renderer *r, int x, int y) 
 {
-    DBG_PRINT_CLASS("render of LTexture");
+    DBG_PRINT_CLASS("render", "LTexture");
 
     // Set rendering space and render to screen
     SDL_Rect renderQuad = {x, y, mWidth, mHeight};

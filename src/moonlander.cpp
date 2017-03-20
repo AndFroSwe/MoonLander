@@ -24,7 +24,7 @@ char shipImage[] = "media/dot.bmp"; // Image to render ship
 
 int main(int argc, char *argv[])
 {
-    DBG_PRINT("### Starting program at main() ###");
+    DBG_PRINT_FUN("main");
     //
     // Initialize SDL
     if (!init()) 
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     // Free resources and close
     close();
 
-    DBG_PRINT("### Program done! ###");
+    DBG_PRINT_FUN(" Program done! ");
 
     return 0;
 } // end main
@@ -86,7 +86,7 @@ bool init()
     /* 
      * Initializes SDL and creates a game window
      */
-    DBG_PRINT("### Running init() ###")
+    DBG_PRINT_FUN("init")
     bool success = true; // Flag the result of the initialization
 
     // Initialize SDL
@@ -156,7 +156,7 @@ bool init()
 SDL_Texture* loadTexture(char *s)
 {
     // Create object to blit to
-    DBG_PRINT("### Running loadTexture () ###");
+    DBG_PRINT_FUN("loadTexture");
 
     SDL_Texture *newTexture = NULL;
 
@@ -185,7 +185,7 @@ SDL_Texture* loadTexture(char *s)
 
 bool loadMedia()
 {
-    DBG_PRINT("### Running loadMedia() ###");
+    DBG_PRINT_FUN("loadMedia");
     bool success = true; // Success flag
 
     // Load png texture
@@ -209,7 +209,7 @@ void close()
     /*
      * Frees resources occupied by process
      */
-    DBG_PRINT("### Running close() ###");
+    DBG_PRINT_FUN("close");
     // Free surfaces
     SDL_DestroyTexture(gTexture);
     gTexture = NULL;
