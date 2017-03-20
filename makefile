@@ -7,7 +7,7 @@ OPTIMIZE = -O3
 ALLFLAGS = -std=$(CSTD) -Wall -pedantic $(OPTIMIZE) $(CFLAGS)
 CPP_FILES := $(wildcard src/*.cpp)
 OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
-LINKER_FLAGS = -lSDL2 # Add your linker files here
+LINKER_FLAGS = -lSDL2 -lSDL2_image# Add your linker files here
 
 # File name settings
 EXE = moonlander.out # Executable file

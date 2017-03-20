@@ -13,6 +13,9 @@
 #include <stdio.h>
 #include <SDL2/SDL.h> // SDL main header
 #include <SDL2/SDL_image.h>
+// ** Class headers **
+#include "Ship.h"
+#include "LTexture.h"
 
 // *** Macros ***
 // To print debug messages, define DBG_PRINT 
@@ -25,6 +28,7 @@
 // *** Function protoypes ***
 bool init(); // Initiates SDL 
 SDL_Surface* loadSurface(char*); // Loads an image to a sruface
+bool loadMedia(); // Load all media
 void close(); // Frees resources on closing program 
 
 #endif /* ifndef MOONLANDER_H_ */

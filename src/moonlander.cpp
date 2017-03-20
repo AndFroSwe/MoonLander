@@ -12,53 +12,54 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 // SDL window objects
 SDL_Window *gWindow = NULL; // Game window
-SDL_Surface *gScreenSurface = NULL; // Surface contained by window
 SDL_Surface *gBackground = NULL; // Surface object containing the background
+SDL_Texture *gTexture = NULL; // Temp
+SDL_Renderer *gRenderer = NULL; // Window renderer
 // Images
 char backgroundImage[] = "media/background.bmp"; // Background image
-
+char shipImage[] = "media/dot.bmp"; // Image to render ship
 
 int main(int argc, char *argv[])
 {
     DBG_PRINT("### Starting program at main() ###");
     // Initialize SDL
-    if (!init()) { // If initialization fails
+    if (!init()) 
+    { // If initialization fails
         fprintf(stderr, "Failed to initialize! SDL_Error: %s\n", SDL_GetError());
-    } else {
-        // Load bakground media
-        gBackground = loadSurface(backgroundImage);
-        if (gBackground == NULL) {
-            fprintf(stderr, "Failed to load media!\n");
-        } else {
-            // Main loop
-            // Loop flag
-            bool quit = false; 
-            // Event handler
-            SDL_Event e;
-
-            while (!quit) {
-                while (SDL_PollEvent(&e) != 0) { // Poll for events
-                    if (e.type == SDL_QUIT) {
-                        quit = true;
-                    } // end if
-                } // end while
-                SDL_Rect stretchRect;
-                stretchRect.x = 0;
-                stretchRect.y = 0;
-                stretchRect.w = SCREEN_WIDTH;
-                stretchRect.h = SCREEN_HEIGHT;
-                SDL_BlitScaled(gBackground, // Surface to blit
-                        NULL, // Copy entire surface
-                        gScreenSurface, // Destination
-                        &stretchRect); // Rectangle to copy into
-                // Update the surface
-                SDL_UpdateWindowSurface(gWindow);
+    } 
+    else 
+    {
+        // Status flag
+        bool quit = false; 
+        
+        // Event handler
+        SDL_Event e;
+        loadMedia();
+        // Main loop
+        while (!quit) 
+        {
+            while (SDL_PollEvent(&e) != 0) // Poll for events
+            { 
+                if (e.type == SDL_QUIT) 
+                {
+                    quit = true;
+                } // end if
             } // end while
-        } // end if
+
+            SDL_RenderClear(gRenderer);
+            SDL_RenderCopy(gRenderer, // renderer
+                            gTexture, // Texture
+                            NULL, // ?
+                            NULL // ?
+                            );
+            SDL_RenderPresent( gRenderer );
+        } // end while
     } // end if 
     //
     // Free resources and close
     close();
+
+    DBG_PRINT("### Program done! ###");
 
     return 0;
 } // end main
@@ -73,54 +74,109 @@ bool init()
     bool success = true; // Flag the result of the initialization
 
     // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) 
+    {
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         success = false;
-    } else {
+    } 
+    else 
+    {
+		if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
+		{
+			fprintf(stderr, "Warning: Linear texture filtering not enabled!" );
+		}
         // Create window
         gWindow = SDL_CreateWindow("Moon lander", // Title of window
-                SDL_WINDOWPOS_UNDEFINED, // X position
-                SDL_WINDOWPOS_UNDEFINED, // Y position
-                SCREEN_WIDTH, // Window width
-                SCREEN_HEIGHT, // Window height
-                SDL_WINDOW_SHOWN); // Flags
-        if (gWindow == NULL) { // If window was not created
+                                    SDL_WINDOWPOS_UNDEFINED, // X position
+                                    SDL_WINDOWPOS_UNDEFINED, // Y position
+                                    SCREEN_WIDTH, // Window width
+                                    SCREEN_HEIGHT, // Window height
+                                    SDL_WINDOW_SHOWN // Flags
+                                    ); // Flags
+        if (gWindow == NULL) 
+        { // If window was not created
             fprintf(stderr, "SDL window could not be created! SDL_Error: %s\n", SDL_GetError());
             success = false;
-        } else {
-            // Get window surface
-            gScreenSurface = SDL_GetWindowSurface(gWindow);
+        } 
+        else 
+        {
+            // Create renderer for window
+            gRenderer = SDL_CreateRenderer(gWindow, // Window to render
+                                            -1, // Index flag. -1 first one supporting requested flags
+                                            SDL_RENDERER_ACCELERATED // Render flags
+                                            );
+            if (gRenderer == NULL) 
+            {
+                fprintf(stderr, "Window renderer could not be created! SDL Error: %s\n", SDL_GetError());
+                success = false;
+            } 
+            else 
+            {
+                // Initialize render draw color
+                SDL_SetRenderDrawColor(gRenderer, // Renderer
+                                    0x00, // R
+                                    0x00, // G
+                                    0x00, // B
+                                    0x00 // Alpha
+                                    );
+                // Initialize png loading
+                int imgFlags = IMG_INIT_PNG;
+                if (!(IMG_Init(imgFlags) & imgFlags)) 
+                {
+                    fprintf(stderr, "SDL_Image could not initialize! SDL image error: %s\n", IMG_GetError());
+                    success = false;
+                }
+            } // end if
         } // endif
     } // endif
     return success;
 } // end init
 
-SDL_Surface* loadSurface(char *s)
+SDL_Texture* loadTexture(char *s)
 {
-    /*
-     * Loads a BMP image given by path s onto an optimized surface.
-     */
-
     // Create object to blit to
-    DBG_PRINT("### Running loadSurface () ###");
-    SDL_Surface *optimizedSurface = NULL;
+    DBG_PRINT("### Running loadTexture () ###");
+
+    SDL_Texture *newTexture = NULL;
+
     // Load image
-    SDL_Surface *loadedSurface = SDL_LoadBMP(s);
-    if (loadedSurface == NULL) { // If image loading failed
+    SDL_Surface *loadedSurface = IMG_Load(s);
+    if (loadedSurface == NULL) 
+    { // If image loading failed
         fprintf(stderr, "Failed to load image %s! SDL_Error: %s\n", s, SDL_GetError());
-    } else {
-        // Convert image to screen format
-        optimizedSurface = SDL_ConvertSurface(loadedSurface, // Source
-                gScreenSurface -> format, // Format
-                0 // Flags (always 0)
+    } 
+    else 
+    {
+        // Create texture from surface pixels
+        newTexture = SDL_CreateTextureFromSurface(gRenderer, // Renderer
+                loadedSurface // Surface
                 );
-        if (optimizedSurface == NULL) { // If failed to create optimized surface
-            fprintf(stderr, "Failed to created optimized surface %s! SDL_Error(): %s\n", s, SDL_GetError() );
-            SDL_FreeSurface(loadedSurface);
+        if (newTexture == NULL) 
+        { // If failed to create optimized surface
+            fprintf(stderr, "Unable to create texture from %s! SDL_Error(): %s\n", s, SDL_GetError() );
         }
+        // Free the surface
+        SDL_FreeSurface(loadedSurface);
     } // end if
-    return optimizedSurface;
+
+    return newTexture;
 } // end loadSurface
+
+bool loadMedia()
+{
+    DBG_PRINT("### Running loadMedia() ###");
+    bool success = true; // Success flag
+
+    // Load png texture
+    gTexture = loadTexture(backgroundImage);
+    if (gTexture == NULL)
+    {
+        fprintf(stderr, "Failed to load texture image!\n");
+        success = false;
+    }
+
+    return success;
+}
 
 void close() 
 {
@@ -129,13 +185,19 @@ void close()
      */
     DBG_PRINT("### Running close() ###");
     // Free surfaces
-    SDL_FreeSurface(gBackground);
-    gBackground = NULL;
+    SDL_DestroyTexture(gTexture);
+    gTexture = NULL;
 
     // Destroy window
+    SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
+    gRenderer = NULL;
     gWindow = NULL;
 
+    // Quit subsystems
+    IMG_Quit();
     SDL_Quit();
 
+
 } // end close
+
