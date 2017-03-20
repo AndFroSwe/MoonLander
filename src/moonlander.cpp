@@ -12,8 +12,6 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 // SDL window objects
 SDL_Window *gWindow = NULL; // Game window
-SDL_Surface *gBackground = NULL; // Surface object containing the background
-SDL_Texture *gTexture = NULL; // Temp
 SDL_Renderer *gRenderer = NULL; // Window renderer
 LTexture bgTexture; // Texture for background
 LTexture object;
@@ -39,9 +37,11 @@ int main(int argc, char *argv[])
         // Event handler
         SDL_Event e;
 
+        // Load textures
         loadMedia();
-        int x = 0;
-        int y = 0;
+        
+        // Game objects
+        Ship ship;
         
         // Main loop
         while (!quit) 
@@ -52,7 +52,11 @@ int main(int argc, char *argv[])
                 {
                     quit = true;
                 } // end if
+                ship.handleEvent(e);
             } // end while
+
+            // Move ship
+            ship.move();
 
             // Clear screen
             SDL_SetRenderDrawColor(gRenderer, // Renderer
@@ -65,7 +69,7 @@ int main(int argc, char *argv[])
 
             // Render objects
             bgTexture.render(gRenderer, 0, 0);
-            object.render(gRenderer, x++, y++);
+            ship.render(gRenderer, object);
 
             // Update screen
             SDL_RenderPresent( gRenderer );
@@ -153,49 +157,20 @@ bool init()
 
 } // end init
 
-SDL_Texture* loadTexture(char *s)
-{
-    // Create object to blit to
-    DBG_PRINT_FUN("loadTexture");
-
-    SDL_Texture *newTexture = NULL;
-
-    // Load image
-    SDL_Surface *loadedSurface = IMG_Load(s);
-    if (loadedSurface == NULL) 
-    { // If image loading failed
-        fprintf(stderr, "Failed to load image %s! SDL_Error: %s\n", s, SDL_GetError());
-    } 
-    else 
-    {
-        // Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface(gRenderer, // Renderer
-                loadedSurface // Surface
-                );
-        if (newTexture == NULL) 
-        { // If failed to create optimized surface
-            fprintf(stderr, "Unable to create texture from %s! SDL_Error(): %s\n", s, SDL_GetError() );
-        }
-        // Free the surface
-        SDL_FreeSurface(loadedSurface);
-    } // end if
-
-    return newTexture;
-} // end loadSurface
-
 bool loadMedia()
 {
     DBG_PRINT_FUN("loadMedia");
+
     bool success = true; // Success flag
 
     // Load png texture
 
-    if (!bgTexture.loadFromFile(gRenderer, bgPath))
+    if (!bgTexture.loadFromFile(gRenderer, bgPath, false))
     {
         fprintf(stderr, "Failed to load texture image!\n");
         success = false;
     }
-    if (!object.loadFromFile(gRenderer, shipImage))
+    if (!object.loadFromFile(gRenderer, shipImage, true))
     {
         fprintf(stderr, "Failed to load ship image!\n");
         success = false;
@@ -211,8 +186,6 @@ void close()
      */
     DBG_PRINT_FUN("close");
     // Free surfaces
-    SDL_DestroyTexture(gTexture);
-    gTexture = NULL;
 
     // Destroy window
     SDL_DestroyRenderer(gRenderer);

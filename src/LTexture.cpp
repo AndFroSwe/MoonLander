@@ -24,7 +24,7 @@ LTexture::~LTexture()
 }
 
 // *** Methods ***
-bool LTexture::loadFromFile(SDL_Renderer *r, char *s)
+bool LTexture::loadFromFile(SDL_Renderer *r, char *s, bool transparent)
 {
 
     DBG_PRINT_CLASS("loadFromFile", "LTexture");
@@ -38,13 +38,16 @@ bool LTexture::loadFromFile(SDL_Renderer *r, char *s)
     if (loadedSurface == NULL) {
         fprintf(stderr, "Unable to load file: %s. SDL_Error: %s\n", s, SDL_GetError());
     } else {
+        if (transparent)
+        {
         SDL_SetColorKey(loadedSurface, // Surface
                 SDL_TRUE, // Enable color key
-                SDL_MapRGB(loadedSurface -> format, 0, // Red
+                SDL_MapRGB(loadedSurface -> format, 0xFF, // Red
                                                     0xFF, // Green
                                                     0xFF // Blue
                                                     ) // Pixel color
                 );
+        }
         // Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(r, loadedSurface);
         if (newTexture == NULL) {

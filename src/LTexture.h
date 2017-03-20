@@ -23,7 +23,7 @@ public:
     LTexture(); // Default constructor
     ~LTexture(); // Destructor
     // *** Methods ***
-    bool loadFromFile(SDL_Renderer*, char*); // Loads a texture
+    bool loadFromFile(SDL_Renderer*, char*, bool); // Loads a texture
     void render(SDL_Renderer*, int, int); // Render to screen
     void mFree(); // Deallocates resources used by texture
 // *** Getters ***
