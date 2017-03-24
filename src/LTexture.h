@@ -2,6 +2,10 @@
  * File: LTexture.h
  * Author: Andreas Fröderberg
  * Description: SDL texture wrapper.
+ *
+ * Todo-list:
+ * TODO: Stretch surface before loading
+ * TODO: Add option to define size of blitted image
  *********************************/
 
 #ifndef LTEXTURE_H

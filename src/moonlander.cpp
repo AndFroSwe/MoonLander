@@ -7,20 +7,14 @@
 #include "moonlander.h"
 
 //*** Define global objects ***
-// Screen
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
 // SDL window objects
 SDL_Window *gWindow = NULL; // Game window
 SDL_Renderer *gRenderer = NULL; // Window renderer
 LTexture bgTexture; // Texture for background
 
-// Images
+// Image paths
 char bgPath[] = "media/background.png"; // Background image
 char shipImage[] = "media/hank.png"; // Image to render ship
-// Sprite options
-const int ANIMATIONS = 4; // Number of animations in sprite
-SDL_Rect gSpriteClips[ANIMATIONS];
 
 
 int main(int argc, char *argv[])
@@ -76,15 +70,12 @@ int main(int argc, char *argv[])
 
             // Render objects
             bgTexture.render(gRenderer, 0, 0, NULL);
-            SDL_Rect *currentClip = &gSpriteClips[frame/4];
-            ship.render(gRenderer,  currentClip);
+            ship.render(gRenderer, // Renderer
+                         NULL // Clip (for sprite animations)
+                         );
 
             // Update screen
             SDL_RenderPresent( gRenderer );
-
-            // Update frame count
-            frame = (frame + 1)%16;
-
         } // end while
     } // end if 
     //

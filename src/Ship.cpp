@@ -61,7 +61,17 @@ void Ship::move()
     DBG_PRINT_CLASS("move", "Ship");
     // Move the ship
     xPos += xVel;
+    // Check for edge collision
+    if ((xPos < 0) || ((xPos + width) > SCREEN_WIDTH)) {
+        xPos -= xVel;
+    }
+
+
     yPos += yVel;
+    // Check for edge collision
+    if ((yPos < 0) || ((yPos + height) > SCREEN_HEIGHT)) {
+        yPos -= yVel;
+    }
 }
 
 void Ship::render(SDL_Renderer *r,  SDL_Rect *clip)
