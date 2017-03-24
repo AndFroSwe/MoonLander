@@ -14,11 +14,10 @@ const int SCREEN_HEIGHT = 480;
 SDL_Window *gWindow = NULL; // Game window
 SDL_Renderer *gRenderer = NULL; // Window renderer
 LTexture bgTexture; // Texture for background
-LTexture object;
 
 // Images
 char bgPath[] = "media/background.png"; // Background image
-char shipImage[] = "media/spritehank.png"; // Image to render ship
+char shipImage[] = "media/hank.png"; // Image to render ship
 // Sprite options
 const int ANIMATIONS = 4; // Number of animations in sprite
 SDL_Rect gSpriteClips[ANIMATIONS];
@@ -26,7 +25,7 @@ SDL_Rect gSpriteClips[ANIMATIONS];
 
 int main(int argc, char *argv[])
 {
-    DBG_PRINT_FUN("main");
+    DBG_PRINT_FUN("start main");
     //
     // Initialize SDL
     if (!init()) 
@@ -46,6 +45,7 @@ int main(int argc, char *argv[])
         
         // Game objects
         Ship ship;
+        ship.addTexture(gRenderer, shipImage);
 
         // Frame count
         int frame = 0;
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
             // Render objects
             bgTexture.render(gRenderer, 0, 0, NULL);
             SDL_Rect *currentClip = &gSpriteClips[frame/4];
-            ship.render(gRenderer, object, currentClip);
+            ship.render(gRenderer,  currentClip);
 
             // Update screen
             SDL_RenderPresent( gRenderer );
@@ -102,7 +102,7 @@ bool init()
     /* 
      * Initializes SDL and creates a game window
      */
-    DBG_PRINT_FUN("init")
+    DBG_PRINT_FUN("start init")
     bool success = true; // Flag the result of the initialization
 
     // Initialize SDL
@@ -165,13 +165,14 @@ bool init()
         } // endif
     } // endif
 
+    DBG_PRINT_FUN("end init")
     return success;
 
 } // end init
 
 bool loadMedia()
 {
-    DBG_PRINT_FUN("loadMedia");
+    DBG_PRINT_FUN("start loadMedia");
 
     bool success = true; // Success flag
 
@@ -182,33 +183,34 @@ bool loadMedia()
         fprintf(stderr, "Failed to load texture image!\n");
         success = false;
     }
-    if (!object.loadFromFile(gRenderer, shipImage, true))
-    {
-        fprintf(stderr, "Failed to load ship image!\n");
-        success = false;
-    } else {
-		//Set sprite clips
-		gSpriteClips[ 0 ].x =   0;
-		gSpriteClips[ 0 ].y =   0;
-		gSpriteClips[ 0 ].w =  60;
-		gSpriteClips[ 0 ].h =  80;
+    //if (!object.loadFromFile(gRenderer, shipImage, true))
+    //{
+        //fprintf(stderr, "Failed to load ship image!\n");
+        //success = false;
+    //} else {
+		////Set sprite clips
+		//gSpriteClips[ 0 ].x =   0;
+		//gSpriteClips[ 0 ].y =   0;
+		//gSpriteClips[ 0 ].w =  60;
+		//gSpriteClips[ 0 ].h =  80;
 
-		gSpriteClips[ 1 ].x =  60;
-		gSpriteClips[ 1 ].y =   0;
-		gSpriteClips[ 1 ].w =  60;
-		gSpriteClips[ 1 ].h =  80;
+		//gSpriteClips[ 1 ].x =  60;
+		//gSpriteClips[ 1 ].y =   0;
+		//gSpriteClips[ 1 ].w =  60;
+		//gSpriteClips[ 1 ].h =  80;
 		
-		gSpriteClips[ 2 ].x = 120;
-		gSpriteClips[ 2 ].y =   0;
-		gSpriteClips[ 2 ].w =  60;
-		gSpriteClips[ 2 ].h =  80;
+		//gSpriteClips[ 2 ].x = 120;
+		//gSpriteClips[ 2 ].y =   0;
+		//gSpriteClips[ 2 ].w =  60;
+		//gSpriteClips[ 2 ].h =  80;
 
-		gSpriteClips[ 3 ].x = 180;
-		gSpriteClips[ 3 ].y =   0;
-		gSpriteClips[ 3 ].w =  60;
-		gSpriteClips[ 3 ].h =  80;
-    }
+		//gSpriteClips[ 3 ].x = 180;
+		//gSpriteClips[ 3 ].y =   0;
+		//gSpriteClips[ 3 ].w =  60;
+		//gSpriteClips[ 3 ].h =  80;
+    //}
 
+    DBG_PRINT_FUN("end loadMedia");
     return success;
 }
 
@@ -217,7 +219,7 @@ void close()
     /*
      * Frees resources occupied by process
      */
-    DBG_PRINT_FUN("close");
+    DBG_PRINT_FUN("start close");
     // Free surfaces
 
     // Destroy window
@@ -230,6 +232,7 @@ void close()
     IMG_Quit();
     SDL_Quit();
 
+    DBG_PRINT_FUN("end close");
 
 } // end close
 

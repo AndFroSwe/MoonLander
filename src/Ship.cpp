@@ -64,11 +64,31 @@ void Ship::move()
     yPos += yVel;
 }
 
-void Ship::render(SDL_Renderer *r, LTexture &t, SDL_Rect *clip)
+void Ship::render(SDL_Renderer *r,  SDL_Rect *clip)
 {
     DBG_PRINT_CLASS("render", "Ship");
 
     // Set rendering space and render to screen
-    t.render(r, (xPos - clip->w)/2, (yPos - clip->h)/2, clip);
+    //texture->render(r, (xPos - clip->w)/2, (yPos - clip->h)/2, clip);
+    texture.render(r, // Renderer
+                    xPos, // X position
+                    yPos, // Y position
+                    NULL // Clip
+                    );
 
 }
+
+bool Ship::addTexture(SDL_Renderer* r, char *path)
+{
+    DBG_PRINT_CLASS("addTexture", "Ship");
+    // Load an image from path and create a texture on renderer r
+    bool success = true; // Status flag
+    // Load the image
+    if (!texture.loadFromFile(r, path, true))
+    {
+        success = false;
+    } 
+
+    return success;
+}
+

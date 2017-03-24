@@ -23,7 +23,8 @@ class Ship
         // *** Methods ***
         void handleEvent(SDL_Event &); // Handle button presses
         void move(); // Moves the ship
-        void render(SDL_Renderer*, LTexture&, SDL_Rect*); // Renders the ship
+        void render(SDL_Renderer*,  SDL_Rect*); // Renders the ship
+        bool addTexture(SDL_Renderer*, char*); // Adds a texture object to the class
 
     private:
         // *** Shape parameters ***
@@ -33,6 +34,8 @@ class Ship
         int xPos, yPos;
         int xVel, yVel;
         int xAcc, yAcc;
+        // *** Texture object
+        LTexture texture;
 };
 
 #endif /* ifndef SHIP_H_ */
