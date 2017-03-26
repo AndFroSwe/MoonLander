@@ -97,7 +97,7 @@ void LTexture::render(SDL_Renderer *r, int x, int y, SDL_Rect *clip)
                     );
 }
 
-// *** Getters ***
+// *** Getters and Setters ***
 int LTexture::getWidth()
 {
 	return mWidth;
@@ -106,4 +106,22 @@ int LTexture::getWidth()
 int LTexture::getHeight()
 {
 	return mHeight;
+}
+
+bool LTexture::setWidth(int w)
+{
+    bool success = false;
+    if (w > 0) {
+        mWidth = w;
+        success = true;
+    }
+}
+
+bool LTexture::setHeight(int h)
+{
+    bool success = false;
+    if (h > 0) {
+        mHeight = h;
+        success = true;
+    }
 }

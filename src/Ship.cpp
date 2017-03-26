@@ -98,6 +98,9 @@ bool Ship::addTexture(SDL_Renderer* r, char *path)
     {
         success = false;
     } 
+    // Set the size of the texture object
+    texture.setWidth(width);
+    texture.setHeight(height);
 
     return success;
 }

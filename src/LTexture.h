@@ -30,9 +30,11 @@ public:
     bool loadFromFile(SDL_Renderer*, char*, bool); // Loads a texture
     void render(SDL_Renderer*, int, int, SDL_Rect*); // Render to screen
     void mFree(); // Deallocates resources used by texture
-// *** Getters ***
+// *** Getters and Setters***
 int getWidth();
 int getHeight();
+bool setWidth(int); // Sets width and does validation
+bool setHeight(int); // Sets height and does validation
 };
     
 

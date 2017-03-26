@@ -174,6 +174,8 @@ bool loadMedia()
         fprintf(stderr, "Failed to load texture image!\n");
         success = false;
     }
+    bgTexture.setWidth(SCREEN_WIDTH);
+    bgTexture.setHeight(SCREEN_HEIGHT);
     //if (!object.loadFromFile(gRenderer, shipImage, true))
     //{
         //fprintf(stderr, "Failed to load ship image!\n");
